@@ -148,7 +148,7 @@ def prepare_dataloaders(data_config, n_gpus, batch_size):
     if n_gpus > 1:
         train_sampler, shuffle = DistributedSampler(trainset), False
 
-    train_loader = DataLoader(trainset, num_workers=8, shuffle=shuffle,
+    train_loader = DataLoader(trainset, num_workers=4, shuffle=shuffle,
                               sampler=train_sampler, batch_size=batch_size,
                               pin_memory=False, drop_last=True,
                               collate_fn=collate_fn)
@@ -203,7 +203,7 @@ def compute_validation_loss(iteration, model, criterion, valset, collate_fn,
     model.eval()
     with torch.no_grad():
         val_sampler = DistributedSampler(valset) if n_gpus > 1 else None
-        val_loader = DataLoader(valset, sampler=val_sampler, num_workers=8,
+        val_loader = DataLoader(valset, sampler=val_sampler, num_workers=1,
                                 shuffle=False, batch_size=batch_size,
                                 pin_memory=False, collate_fn=collate_fn)
 
@@ -308,6 +308,7 @@ def train(n_gpus, rank, output_directory, epochs, optim_algo, learning_rate,
     if seed is None:
         # convert output directory to seed using a hash
         print(output_directory)
+        print(os.path.abspath(output_directory))
         seed = hashlib.md5(output_directory.encode()).hexdigest()
         seed = int(seed, 16) % 2000
     print('Using seed {}'.format(seed))
@@ -375,7 +376,7 @@ def train(n_gpus, rank, output_directory, epochs, optim_algo, learning_rate,
     prepare_model_weights(model, unfreeze_modules)
     model.train()
 
-    epoch_offset = max(0, int(iteration / len(train_loader)))
+    epoch_offset = max(0, int(iteration / len(train_loader) if len(train_loader) else iteration))
     # ================ MAIN TRAINNIG LOOP! ===================
     for epoch in range(epoch_offset, epochs):
         print("Epoch: {}".format(epoch))
@@ -438,6 +439,7 @@ def train(n_gpus, rank, output_directory, epochs, optim_algo, learning_rate,
 
             if iteration > -1 and iteration % iters_per_checkpoint == 0:
                 if rank == 0:
+                    print("here")
                     val_loss_outputs = compute_validation_loss(
                         iteration, model, criterion, valset, collate_fn,
                         batch_size, n_gpus, logger=logger,

@@ -357,7 +357,7 @@ class Data(torch.utils.data.Dataset):
                 print("saving f0 to {}".format(f0_path))
                 torch.save({'f0': f0,
                             'voiced_mask': voiced_mask,
-                            'p_voiced': p_voiced}, f0_path)
+                            'p_voiced': p_voiced}, f0_path, _use_new_zipfile_serialization=False)
             if f0 is None:
                 raise Exception("STOP, BROKEN F0 {}".format(audiopath))
 

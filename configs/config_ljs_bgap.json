@@ -6,7 +6,7 @@
         "learning_rate": 1e-4,
         "weight_decay": 1e-6,
         "sigma": 1.0,
-        "iters_per_checkpoint": 5000,
+        "iters_per_checkpoint": 2503,
         "batch_size": 16,
         "seed": null,
         "checkpoint_path": "",
@@ -14,11 +14,11 @@
         "ignore_layers_warmstart": [],
         "finetune_layers": [],
         "include_layers": [],
-        "vocoder_config_path": "models/hifigan_config_22khz.json",
-        "vocoder_checkpoint_path": "models/hifigan_ljs_generator_v1",
+        "vocoder_config_path": "models/config_v1.json",
+        "vocoder_checkpoint_path": "models/g_02500000",
         "log_attribute_samples": true,
         "log_decoder_samples": true,
-        "warmstart_checkpoint_path": "path/to/pretrained/decoder",
+        "warmstart_checkpoint_path": "",
         "use_amp": false,
         "grad_clip_val": 1.0,
         "loss_weights": {
@@ -39,7 +39,7 @@
             "LJS": {
                 "basedir": "filelists/",
                 "audiodir": "wavs",
-                "filelist": "ljs_audiopath_text_speaker_train_filelist.txt",
+                "filelist": "file_list.txt",
                 "lmdbpath": ""
             }
         },
@@ -47,7 +47,7 @@
             "LJS": {
                 "basedir": "filelists/",
                 "audiodir": "wavs",
-                "filelist": "ljs_audiopath_text_speaker_val_filelist.txt",
+                "filelist": "file_list.txt",
                 "lmdbpath": ""
             }
         },
